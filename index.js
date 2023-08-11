@@ -9,12 +9,17 @@ const mongoose = require('mongoose');
 dotenv.config({ path: './config.env' })
 const PORT = process.env.PORT;
 const BASE_URL = process.env.BASE_URL;
-const corsOptions = {
-  origin: [`${BASE_URL}`], 
-  credentials: true, 
-};
+const allowedOrigins = ['https://64d6ae1e0c870d1dd5251e01--merry-cascaron-f293ee.netlify.app'];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 
-app.use(cors(corsOptions));
 require("./db/conn");
 
 app.use(express.json());
